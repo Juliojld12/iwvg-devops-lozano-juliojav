@@ -46,6 +46,15 @@ public class SearchesTest {
                 .contains("Gonzalez")
                 .doesNotContain("Perez");
     }
+    @Test
+    void testFindUserNameBySomeImproperFraction() {
+        List<String> result = this.searches.findUserNameBySomeImproperFraction().toList();
+
+        assertThat(result)
+                .isNotEmpty()
+                .contains("Luis")
+                .doesNotContain("Ana");
+    }
 
 
 }

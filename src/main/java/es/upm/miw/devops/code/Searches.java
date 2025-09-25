@@ -30,6 +30,11 @@ public class Searches {
                 .filter(user -> user.getFractions().stream().anyMatch(Fraction::isImproper))
                 .map(User::getFamilyName);
     }
+    public Stream<String> findUserNameBySomeImproperFraction() {
+        return this.usersDatabase.findAll()
+                .filter(user -> user.getFractions().stream().anyMatch(Fraction::isImproper))
+                .map(User::getName);
+    }
 
 
 
