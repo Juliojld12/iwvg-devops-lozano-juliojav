@@ -28,5 +28,15 @@ public class SearchesTest {
         System.out.println("División usuario 1: " + result);
     }
 
+    @Test
+    void testFindUserIdByAllProperFraction() {
+        List<String> result = this.searches.findUserIdByAllProperFraction().toList();
+
+        assertThat(result)
+                .isNotEmpty()
+                .contains("1", "2", "4")
+                .doesNotContain("3");
+    }
+
 
 }

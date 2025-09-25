@@ -16,7 +16,6 @@ class UserTest {
         assertEquals("Julio", user.getName());
         assertEquals("Lozano", user.getFamilyName());
 
-        // Por defecto, la lista de fracciones está vacía
         assertNotNull(user.getFractions());
         assertTrue(user.getFractions().isEmpty());
     }

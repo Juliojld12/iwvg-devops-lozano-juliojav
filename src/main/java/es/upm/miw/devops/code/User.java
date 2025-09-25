@@ -10,16 +10,13 @@ public class User {
     private List<Fraction> fractions;
 
     public User() {
-        // Constructor por defecto: lista vacía de fracciones
         this.fractions = List.of();
     }
 
-    // Constructor sin fracciones explícitas
     public User(String id, String name, String familyName) {
         this(id, name, familyName, List.of());
     }
 
-    // Constructor completo con fracciones
     public User(String id, String name, String familyName, List<Fraction> fractions) {
         this.id = id;
         this.name = name;
@@ -27,7 +24,6 @@ public class User {
         this.fractions = fractions;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
