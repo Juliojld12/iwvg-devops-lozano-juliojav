@@ -5,11 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/")
 public class SystemResource {
 
     public static final String VERSION_BADGE = "/version-badge";
+
     private static final String BADGE_IMAGE_TEMPLATE = """
             <svg xmlns="http://www.w3.org/2000/svg" width="%d" height="20">
                 <linearGradient id="a" x2="0" y2="100%%">
@@ -28,23 +31,45 @@ public class SystemResource {
                 </g>
             </svg>
             """;
+
     private static final int TEXT_MARGIN = 12;
     private static final int CHARACTER_WIDTH = 6;
+
     @Value("${info.app.artifact}")
     private String artifact;
+
     @Value("${info.app.version}")
     private String version;
+
     @Value("${info.app.build}")
     private String build;
 
+    // --- sanitize helpers to avoid injection in SVG text nodes ---
+    private static String xmlEscape(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&apos;");
+    }
+
     public String generateBadge(String label, String value) {
-        int widthLabel = TEXT_MARGIN + CHARACTER_WIDTH * label.length();
-        int widthValue = TEXT_MARGIN + CHARACTER_WIDTH * value.length();
+        String safeLabel = xmlEscape(label);
+        String safeValue = xmlEscape(value);
+
+        int widthLabel = TEXT_MARGIN + CHARACTER_WIDTH * safeLabel.length();
+        int widthValue = TEXT_MARGIN + CHARACTER_WIDTH * safeValue.length();
         int textWidth = widthLabel + widthValue;
         int middleLabel = widthLabel / 2;
         int middleValue = widthLabel + widthValue / 2;
-        return String.format(BADGE_IMAGE_TEMPLATE, textWidth, textWidth, widthLabel, widthValue, widthLabel, textWidth,
-                middleLabel, label, middleLabel, label, middleValue, value, middleValue, value);
+
+        return String.format(
+                BADGE_IMAGE_TEMPLATE,
+                textWidth, textWidth, widthLabel, widthValue, widthLabel, textWidth,
+                middleLabel, safeLabel, middleLabel, safeLabel,
+                middleValue, safeValue, middleValue, safeValue
+        );
     }
 
     @GetMapping
@@ -58,7 +83,7 @@ public class SystemResource {
 
     @GetMapping(value = VERSION_BADGE, produces = {"image/svg+xml"})
     public byte[] generateBadge() {
-        return this.generateBadge("Render", "v" + version).getBytes();
+        // charset explícito para evitar warning de Sonar
+        return this.generateBadge("Render", "v" + version).getBytes(StandardCharsets.UTF_8);
     }
-
 }
