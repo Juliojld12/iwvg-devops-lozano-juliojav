@@ -43,7 +43,7 @@ public class SearchesTest {
 
         assertThat(result)
                 .isNotEmpty()
-                .contains("Gonzalez")
+                .contains("Gonzalez")  // si sigue cumpliendo
                 .doesNotContain("Perez");
     }
     @Test
