@@ -18,5 +18,12 @@ public class Searches {
                 .orElse(null);
     }
 
+    public Stream<String> findUserIdByAllProperFraction() {
+        return this.usersDatabase.findAll()
+                .filter(user -> !user.getFractions().isEmpty())
+                .filter(user -> user.getFractions().stream().allMatch(Fraction::isProper))
+                .map(User::getId);
+    }
+
 
 }
