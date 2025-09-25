@@ -1,7 +1,6 @@
-package es.upm.miw.devops.functionaltests;
+package es.upm.miw.devops.code;
 
 
-import es.upm.miw.devops.code.Fraction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

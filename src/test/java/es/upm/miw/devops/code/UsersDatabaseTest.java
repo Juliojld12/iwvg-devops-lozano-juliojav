@@ -1,7 +1,5 @@
-package es.upm.miw.devops.functionaltests;
+package es.upm.miw.devops.code;
 
-import es.upm.miw.devops.code.User;
-import es.upm.miw.devops.code.UsersDatabase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
