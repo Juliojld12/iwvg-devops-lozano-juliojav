@@ -14,6 +14,7 @@
 
     <groupId>es.upm.miw</groupId>
     <artifactId>iwvg-devops-lozano-juliojav</artifactId>
+
     <version>5.0.0</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
