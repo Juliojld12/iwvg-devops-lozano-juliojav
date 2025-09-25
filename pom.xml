@@ -13,9 +13,8 @@
     </parent>
 
     <groupId>es.upm.miw</groupId>
-    <artifactId>iwvg-devops-lozano-juliojav</artifactId>
-
-    <version>5.0.0</version>
+    <artifactId>iwvg-devops-lozano-julioj</artifactId>
+    <version>5.1.0-RELEASE</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
     <url>http://github.com/miw-upm/${project.artifactId}</url>
@@ -29,8 +28,8 @@
 
     <developers>
         <developer>
-            <name>Julio</name>
-            <id>JulioJld12</id>
+            <name>Julio Lozano</name>
+            <id>J.Lozano</id>
             <email>juliojavierlozano@gmail.com</email>
             <organization>MIW UPM</organization>
             <roles>
@@ -41,27 +40,20 @@
     </developers>
 
     <properties>
-        <!-- Encode -->
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.resources.sourceEncoding>UTF-8</project.resources.sourceEncoding>
-        <!-- Java -->
-        <java.version>21</java.version>
-        <deploy>${project.artifactId}-${project.version}</deploy>
-        <!-- Maven -->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <jacoco.version>0.8.13</jacoco.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
-        <!-- coverage report -->
-        <jacoco.version>0.8.13</jacoco.version>
-        <!-- Official Plugin Sonar -->
         <sonar-maven-plugin-version>5.2.0.4988</sonar-maven-plugin-version>
-        <!-- OpenAPI -->
         <springdoc-openapi-starter-webmvc-ui.version>2.8.11</springdoc-openapi-starter-webmvc-ui.version>
     </properties>
 
     <dependencies>
-        <!-- Web -->
+        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -70,23 +62,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!-- Actuator -->
-        <!-- http://localhost:8080/actuator/info   -->
-        <!-- http://localhost:8080/actuator/health -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!-- OpenAPI http://localhost:8080/swagger-ui.html -->
-        <!-- OpenAPI http://localhost:8080/v3/api-docs -->
-        <!-- OpenAPI http://localhost:8081/v3/api-docs.yaml (yaml)  -->
+        <!-- OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
         </dependency>
-
-        <!-- ================ API Test =========================== -->
+        <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -99,13 +85,22 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.25.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -117,50 +112,51 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- sonar plugin -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin-version}</version>
-            </plugin>
-            <!-- coverage report -->
+
+            <!-- Jacoco Plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <executions>
+                    <!-- Prepara Jacoco -->
                     <execution>
-                        <id>default-prepare-agent</id>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <!-- Genera reportes en verify -->
                     <execution>
-                        <id>default-report</id>
-                        <phase>post-integration-test</phase>
+                        <id>report</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- SonarCloud Plugin -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin-version}</version>
+            </plugin>
+
+            <!-- Surefire Plugin (unit tests) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -Xshare:off
-                    </argLine>
-                </configuration>
             </plugin>
+
+            <!-- Failsafe Plugin (integration + functional) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
                 <executions>
-                    <!-- 1) Integration Tests -->
                     <execution>
                         <id>integration-tests</id>
                         <phase>integration-test</phase>
@@ -173,7 +169,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 2) Functional Tests -->
                     <execution>
                         <id>functional-tests</id>
                         <phase>integration-test</phase>
@@ -186,7 +181,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 3) Verificación final (reporta fallos si algún IT o FT falla) -->
                     <execution>
                         <id>verify-all</id>
                         <phase>verify</phase>
