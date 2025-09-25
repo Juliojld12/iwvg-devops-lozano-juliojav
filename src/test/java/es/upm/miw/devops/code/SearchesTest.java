@@ -37,6 +37,15 @@ public class SearchesTest {
                 .contains("1", "2", "4")
                 .doesNotContain("3");
     }
+    @Test
+    void testFindUserFamilyNameBySomeImproperFraction() {
+        List<String> result = this.searches.findUserFamilyNameBySomeImproperFraction().toList();
+
+        assertThat(result)
+                .isNotEmpty()
+                .contains("Gonzalez")
+                .doesNotContain("Perez");
+    }
 
 
 }
